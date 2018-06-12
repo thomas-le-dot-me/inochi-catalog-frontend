@@ -7,15 +7,15 @@ import './App.css';
 import Edit from './components/Edit';
 import Create from './components/Create';
 import Show from './components/Show';
-import Card from './components/Card';
+import Items from './components/Items';
 
 ReactDOM.render(
   <Router>
       <div>
         <Route exact path='/' component={App} />
         <Route path='/edit/:id' component={Edit} />
-        <Route path='/create' component={Card} />
         <Route path='/show/:id' component={Show} />
+        <Route path='/items' component={Items} />
       </div>
   </Router>,
   document.getElementById('root')
