@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Navbar from './Navbar';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -9,12 +10,12 @@ class Create extends Component {
     super();
     this.state = {
       name: '',
-      address: '',
-      city: '',
-      phone: '',
-      email: ''
+      price: '',
+      imgUrl: '',
+      barcodeUrl: ''
     };
   }
+
   onChange = (e) => {
     const state = this.state
     state[e.target.name] = e.target.value;
@@ -23,52 +24,50 @@ class Create extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
+    const { name, price, imgUrl, barcodeUrl } = this.state;
 
-    const { name, address, city, phone, email } = this.state;
-
-    axios.post('/api/v1/contacts', { name, address, city, phone, email })
+    axios.post('http://localhost:3001/api/v1/items', { name, price, imgUrl, barcodeUrl })
       .then((result) => {
         this.props.history.push("/")
       });
   }
 
   render() {
-    const { name, address, city, phone, email } = this.state;
+    const { name, price, imgUrl, barcodeUrl } = this.state;
     return (
-      <div class="container">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">
-              ADD CONTACT
-            </h3>
-          </div>
-          <div class="panel-body">
-            <h4><Link to="/"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Contacts List</Link></h4>
-            <form onSubmit={this.onSubmit}>
-              <div class="form-group">
-                <label for="isbn">Name:</label>
-                <input type="text" class="form-control" name="name" value={name} onChange={this.onChange} placeholder="Name" />
-              </div>
-              <div class="form-group">
-                <label for="title">Address:</label>
-                <input type="text" class="form-control" name="address" value={address} onChange={this.onChange} placeholder="Address" />
-              </div>
-              <div class="form-group">
-                <label for="author">City:</label>
-                <input type="text" class="form-control" name="city" value={city} onChange={this.onChange} placeholder="City" />
-              </div>
-              <div class="form-group">
-                <label for="published_date">Phone:</label>
-                <input type="text" class="form-control" name="phone" value={phone} onChange={this.onChange} placeholder="Phone Number" />
-              </div>
-              <div class="form-group">
-                <label for="publisher">Email:</label>
-                <input type="email" class="form-control" name="email" value={email} onChange={this.onChange} placeholder="Email Address" />
-              </div>
-              <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-          </div>
-        </div>
+        <div>
+            <Navbar></Navbar>
+            <div className="container">
+                <div className="panel panel-default">
+                <div className="panel-heading">
+                    <h3 className="panel-title">
+                    Add item
+                    </h3>
+                </div>
+                <div className="panel-body">
+                    <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" className="form-control" name="name" value={name} onChange={this.onChange} placeholder="Name" />
+                    </div>
+                    <div className="form-group">
+                        <label for="price">Price:</label>
+                        <input type="text" className="form-control" name="price" value={price} onChange={this.onChange} placeholder="VND" />
+                    </div>
+                    <div className="form-group">
+                        <label for="imgUrl">Image URL:</label>
+                        <input type="text" className="form-control" name="imgUrl" value={imgUrl} onChange={this.onChange} placeholder="http://" />
+                    </div>
+                    <div className="form-group">
+                        <label for="barcodeUrl">Barcode URL:</label>
+                        <input type="text" className="form-control" name="barcodeUrl" value={barcodeUrl} onChange={this.onChange} 
+                        placeholder="http://" />
+                    </div>
+                    <button type="submit" className="btn btn-default">Submit</button>
+                    </form>
+                </div>
+                </div>
+            </div>
       </div>
     );
   }

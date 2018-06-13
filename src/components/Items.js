@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Item from './Item';
+import axios from 'axios';
 import Navbar from './Navbar';
 
 class Items extends Component {
@@ -12,47 +12,11 @@ class Items extends Component {
     }
 
     componentDidMount() {
-        // axios.get('http://localhost:3000/api/v1/contacts')
-        //   .then(res => {
-        const items = [
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            },
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            },
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            },
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            },
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            },
-            {
-                name : 'MS1',
-                price: '40.000 VND',
-                imgUrl: 'https://www.soufeel.com.tw/media/catalog/product/cache/0/small_image/380x380/9df78eab33525d08d6e5fb8d27136e95/C/E/CED045.jpg',
-                barcodeUrl : 'https://upload.wikimedia.org/wikipedia/commons/6/65/Code11_barcode.png'
-            }
-        ]    
-        this.setState({ items: items });
+        axios.get('http://localhost:3001/api/v1/items')
+          .then(res => {
+              console.log(res.data);
+              this.setState({ items: res.data });
+          });
     }
 
     renderItemBlock(item){
@@ -61,7 +25,7 @@ class Items extends Component {
                 <div className="card">
                     <img className="card-img-top img-fluid" src={item.imgUrl}></img>
                     <div class="card-body">
-                        <h5 class="card-title">{item.name}</h5>
+                        <h5 class="card-title text-center">{item.name} - <span>{item.price}</span> </h5>
                         <img className="img-fluid" src={item.barcodeUrl}></img>
                     </div>
                  </div>
@@ -102,9 +66,11 @@ class Items extends Component {
     render () {
         const items = this.renderItems(this.state.items);
         return (
-            <div className="container">
+            <div>
                 <Navbar></Navbar>
-                {items}
+                <div className="container">
+                    {items}
+                </div>
             </div>
         );
     }
