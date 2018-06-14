@@ -19,17 +19,76 @@ class Create extends Component {
   onChange = (e) => {
     const state = this.state
     state[e.target.name] = e.target.value;
+    console.log(e.target.name);
     this.setState(state);
   }
+  
+  cloudinaryImageUpload = async(formData) => {
+    try {
+        const CLOUDINARY_URL='https://api.cloudinary.com/v1_1/dquw8pmyf/upload';
+        const CLOUDINARY_PRESET = 'jgwzvl8r';
+        axios({
+            url: CLOUDINARY_URL,
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/x-www-form-urlencoded'
+            },
+            data: imgFormData
+        })
+        // this.setState({ user })
+      } catch (e) {
+        this.setState({ err: e.message })
+      } 
+  }
+
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { name, price, imgUrl, barcodeUrl } = this.state;
+    const { name, price} = this.state;
 
-    axios.post('http://localhost:3001/api/v1/items', { name, price, imgUrl, barcodeUrl })
-      .then((result) => {
-        this.props.history.push("/")
-      });
+    const CLOUDINARY_URL='https://api.cloudinary.com/v1_1/dquw8pmyf/upload';
+    const CLOUDINARY_PRESET = 'jgwzvl8r';
+
+    const imgFile = e.target.imgUrl.files[0];
+    let imgFormData = new FormData();
+    imgFormData.append('file', imgFile);
+    imgFormData.append('upload_preset', CLOUDINARY_PRESET);
+
+
+    const barcodeFile = e.target.barcodeUrl.files[0];
+    let barcodeFormData = new FormData();
+    barcodeFormData.append('file', barcodeFile);
+    barcodeFormData.append('upload_preset', CLOUDINARY_PRESET);
+
+    let imgUrl = '', barcodeUrl = '';
+    axios({
+        url: CLOUDINARY_URL,
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/x-www-form-urlencoded'
+        },
+        data: imgFormData
+    }).then((res) => {
+        imgUrl = res.data.url;
+        axios({
+            url: CLOUDINARY_URL,
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/x-www-form-urlencoded'
+            },
+            data: barcodeFormData
+        }).then( (res) => {
+            barcodeUrl = res.data.url;
+            axios.post('http://localhost:3001/api/v1/items', { name, price, imgUrl, barcodeUrl })
+             .then( (res) => {
+                console.log(res);
+            });
+        }).catch(function(err){
+            console.log(err);
+        });
+    }).catch((err) => {
+        console.log(err);
+    });
   }
 
   render() {
@@ -55,13 +114,12 @@ class Create extends Component {
                         <input type="text" className="form-control" name="price" value={price} onChange={this.onChange} placeholder="VND" />
                     </div>
                     <div className="form-group">
-                        <label for="imgUrl">Image URL:</label>
-                        <input type="text" className="form-control" name="imgUrl" value={imgUrl} onChange={this.onChange} placeholder="http://" />
+                        <label for="imgUrl">Image</label>
+                        <input type="file" className="form-control" name="imgUrl" />
                     </div>
                     <div className="form-group">
-                        <label for="barcodeUrl">Barcode URL:</label>
-                        <input type="text" className="form-control" name="barcodeUrl" value={barcodeUrl} onChange={this.onChange} 
-                        placeholder="http://" />
+                        <label for="barcodeUrl">Barcode</label>
+                        <input type="file" className="form-control" name="barcodeUrl" />
                     </div>
                     <button type="submit" className="btn btn-default">Submit</button>
                     </form>
